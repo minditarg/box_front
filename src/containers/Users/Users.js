@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import Header from'../../components/Header/Header';
 import axios from 'axios';
 import * as actionTypes from '../../store/actions';
+import MUIDataTable from "mui-datatables";
+
 
 const columns = [
   {
@@ -19,6 +21,67 @@ const columns = [
 
   },
 ];
+
+const columns2 = [
+ {
+  name: "nombre",
+  label: "Nombre",
+  options: {
+   filter: true,
+   sort: true,
+  }
+ },
+ {
+  name: "username",
+  label: "Nombre de usuario",
+  options: {
+   filter: true,
+   sort: false,
+  }
+ }
+];
+
+
+const textLabels = {
+  body: {
+    noMatch: 'No se encontraron registros',
+    toolTip: 'Ordenar',
+  },
+  pagination: {
+    next: 'Página siguiente',
+    previous: 'Página anterior',
+    rowsPerPage: 'Registros por página:',
+    displayRows: 'of',
+  },
+  toolbar: {
+    search: 'Buscar',
+    downloadCsv: 'Descargar CSV',
+    print: 'Imprimir',
+    viewColumns: 'Ver Columnas',
+    filterTable: 'Filtrar',
+  },
+  filter: {
+    all: 'Todos',
+    title: 'FILTROS',
+    reset: 'RESET',
+  },
+  viewColumns: {
+    title: 'Mostrar Columnas',
+    titleAria: 'Mostrar/Ocultar Columnas',
+  },
+  selectedRows: {
+    text: 'Usuario(s) seleccionados',
+    delete: 'Eliminar usuario',
+    deleteAria: 'Eliminar usuarios seleccionados',
+  },
+};
+
+const options = {
+  filterType: 'checkbox',
+  selectableRowsOnClick : 'true',
+  textLabels: textLabels
+
+};
 
 class Users extends Component {
   state = {
@@ -40,10 +103,14 @@ class Users extends Component {
 
       }
 
-      axios.get('/list-users')
+      axios.get('/list-users-admin')
       .then(res => {
         if(res.data.success == 1) {
-            let resultado = [...res.data.array_result];
+            let resultado = [...res.data.result];
+            resultado.map(element => {
+              element.nombre = element.apellido + ', ' + element.nombre;
+              delete element.apellido
+            })
             this.setState({
               users: resultado
             })
@@ -87,15 +154,18 @@ class Users extends Component {
     }
 
 
-    render () {
 
+
+    render () {
         return (
           <div>
           <Header user={ this.props.userData.user } />
-          <DataTable
-       title="Usuarios"
-       columns={columns}
+
+     <MUIDataTable
+       title={"Usuarios"}
        data={this.state.users}
+       columns={columns2}
+       options={options}
      />
           </div>
         );
