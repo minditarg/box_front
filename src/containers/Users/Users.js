@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import DataTable from 'react-data-table-component';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Header from'../../components/Header/Header';
+import Header from '../../components/Header/Header';
 import axios from 'axios';
 import * as actionTypes from '../../store/actions';
 import MUIDataTable from "mui-datatables";
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
 
+
+const theme = createMuiTheme({
+ 
+});
 
 const columns = [
   {
@@ -23,22 +27,22 @@ const columns = [
 ];
 
 const columns2 = [
- {
-  name: "nombre",
-  label: "Nombre",
-  options: {
-   filter: true,
-   sort: true,
+  {
+    name: "nombre",
+    label: "Nombre",
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: "username",
+    label: "usuario",
+    options: {
+      filter: true,
+      sort: false,
+    }
   }
- },
- {
-  name: "username",
-  label: "Nombre de usuario",
-  options: {
-   filter: true,
-   sort: false,
-  }
- }
 ];
 
 
@@ -78,8 +82,11 @@ const textLabels = {
 
 const options = {
   filterType: 'checkbox',
-  selectableRowsOnClick : 'true',
-  textLabels: textLabels
+  selectableRowsOnClick: 'true',
+  textLabels: textLabels,
+  resizableColumns: false,
+  responsive: 'stacked',
+
 
 };
 
@@ -89,54 +96,54 @@ class Users extends Component {
 
   }
 
-    componentDidMount() {
-        if(!this.props.userData.user) {
-          axios.get('/me')
-          .then(res => {
-            if(res.data.success == 1) {
-              this.props.onLogin(res.data.user);
-            } else if(res.data.success == 3) {
-              this.props.history.replace('/');
-            }
+  componentDidMount() {
+    if (!this.props.userData.user) {
+      axios.get('/me')
+        .then(res => {
+          if (res.data.success == 1) {
+            this.props.onLogin(res.data.user);
+          } else if (res.data.success == 3) {
+            this.props.history.replace('/');
+          }
 
         })
 
-      }
+    }
 
-      axios.get('/list-users-admin')
+    axios.get('/list-users-admin')
       .then(res => {
-        if(res.data.success == 1) {
-            let resultado = [...res.data.result];
-            resultado.map(element => {
-              element.nombre = element.apellido + ', ' + element.nombre;
-              delete element.apellido
-            })
-            this.setState({
-              users: resultado
-            })
+        if (res.data.success == 1) {
+          let resultado = [...res.data.result];
+          resultado.map(element => {
+            element.nombre = element.apellido + ', ' + element.nombre;
+            delete element.apellido
+          })
+          this.setState({
+            users: resultado
+          })
         }
 
       })
 
-    }
+  }
 
-    handleValue = (event,index) => {
-      let newObject = {orderForm: { ...this.state.orderForm }};
-      newObject['orderForm'][event.target.name] = event.target.value;
-      this.setState(newObject);
+  handleValue = (event, index) => {
+    let newObject = { orderForm: { ...this.state.orderForm } };
+    newObject['orderForm'][event.target.name] = event.target.value;
+    this.setState(newObject);
 
-    }
+  }
 
-    handleSubmit = (event,index) => {
-      event.preventDefault();
-      axios.post(`/login-json`, { username: event.target.username.value, password:event.target.password.value  })
+  handleSubmit = (event, index) => {
+    event.preventDefault();
+    axios.post(`/login-json`, { username: event.target.username.value, password: event.target.password.value })
       .then(res => {
 
         let estado = null
-        if(res.data.success == 0) {
+        if (res.data.success == 0) {
           estado = false
         }
-        if(res.data.success == 1) {
+        if (res.data.success == 1) {
           estado = true
           this.props.onLogin(res.data.user.username);
         }
@@ -144,46 +151,56 @@ class Users extends Component {
         this.setState({
           orderForm: {
             ...this.state.orderForm,
-            password:'',
-            successPass:estado
+            password: '',
+            successPass: estado
           }
         })
 
       })
 
-    }
+  }
 
 
 
 
-    render () {
-        return (
-          <div>
-          <Header user={ this.props.userData.user } />
+  render() {
+    return ([
 
-     <MUIDataTable
-       title={"Usuarios"}
-       data={this.state.users}
-       columns={columns2}
-       options={options}
-     />
+      <Header user={this.props.userData.user} />
+      ,
+      <div className="container">
+        <div className="row prueba justify-content-center">
+          <div className="col-md-7 mt-4 ">
+            <MuiThemeProvider theme={theme}>
+              <MUIDataTable
+                title={"Usuarios"}
+                data={this.state.users}
+                columns={columns2}
+                options={options}
+                />
+
+            </MuiThemeProvider>
           </div>
-        );
-    }
+        </div>
+      </div>
+    ]
+
+    );
+  }
 }
 
 const mapDispatchToProps = dispatch => {
-    return {
-        onLogin: (user) => dispatch({type: actionTypes.LOGIN_USER, userData: user}),
+  return {
+    onLogin: (user) => dispatch({ type: actionTypes.LOGIN_USER, userData: user }),
 
-    }
+  }
 }
 
 
 const mapStateToProps = state => {
-    return {
-      userData: state
-    }
+  return {
+    userData: state
+  }
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(Users);
+export default connect(mapStateToProps, mapDispatchToProps)(Users);

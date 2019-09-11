@@ -1,21 +1,21 @@
 import React from 'react';
+import TextField from '@material-ui/core/TextField';
 
 
 const input = ( props ) => {
     let inputElement = null;
     let textValidation = null
-
+    console.log(props);
     if (props.invalid && props.shouldValidate && props.touched) {
-      textValidation = (
-        <span>Hay error de validacion en required</span>
+      textValidation =  props.textValid 
 
-      )
+      
 
     }
 
     switch ( props.elementType ) {
         case ( 'input' ):
-            inputElement = <input
+            inputElement = <TextField
 
                 {...props.elementConfig}
                 value={props.value}
@@ -54,7 +54,7 @@ const input = ( props ) => {
         <div>
             <label>{props.label}</label>
             {inputElement}
-            {textValidation}
+            <br /><span style={{ fontSize:'80%',color:'red' }}>{textValidation}</span>
         </div>
     );
 
