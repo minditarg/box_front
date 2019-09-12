@@ -4,97 +4,78 @@ import { connect } from 'react-redux';
 import Header from '../../components/Header/Header';
 import axios from 'axios';
 import * as actionTypes from '../../store/actions';
-import MUIDataTable from "mui-datatables";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
-const theme = createMuiTheme({
- 
-});
 
-const columns = [
-  {
-    name: 'Nombre',
-    selector: 'nombre',
-    sortable: true,
-  },
-  {
-    name: 'Apellido',
-    selector: 'apellido',
-    sortable: true,
-
-  },
-];
-
-const columns2 = [
-  {
-    name: "nombre",
-    label: "Nombre",
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: "username",
-    label: "usuario",
-    options: {
-      filter: true,
-      sort: false,
-    }
-  }
-];
-
-
-const textLabels = {
-  body: {
-    noMatch: 'No se encontraron registros',
-    toolTip: 'Ordenar',
-  },
-  pagination: {
-    next: 'Página siguiente',
-    previous: 'Página anterior',
-    rowsPerPage: 'Registros por página:',
-    displayRows: 'of',
-  },
-  toolbar: {
-    search: 'Buscar',
-    downloadCsv: 'Descargar CSV',
-    print: 'Imprimir',
-    viewColumns: 'Ver Columnas',
-    filterTable: 'Filtrar',
-  },
-  filter: {
-    all: 'Todos',
-    title: 'FILTROS',
-    reset: 'RESET',
-  },
-  viewColumns: {
-    title: 'Mostrar Columnas',
-    titleAria: 'Mostrar/Ocultar Columnas',
-  },
-  selectedRows: {
-    text: 'Usuario(s) seleccionados',
-    delete: 'Eliminar usuario',
-    deleteAria: 'Eliminar usuarios seleccionados',
-  },
-};
-
-const options = {
-  filterType: 'checkbox',
-  selectableRowsOnClick: 'true',
-  textLabels: textLabels,
-  resizableColumns: false,
-  responsive: 'stacked',
-
-
-};
 
 class Users extends Component {
   state = {
-    users: []
+    users: [],
+    checked:[],
+    menuContext: null
+
 
   }
+
+  deleteUser = value => {
+
+    const currentIndex = this.state.users.indexOf(value);
+    const newUsers = [...this.state.users];
+
+    newUsers.splice(currentIndex, 1);
+
+    this.setState({
+      users:newUsers
+    });
+
+  }
+
+  handleToggle = value => {
+
+      const currentIndex = this.state.checked.indexOf(value);
+      const newChecked = [...this.state.checked];
+
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
+
+      this.setState({
+        checked:newChecked
+      });
+    };
+
+  handleClose = () => {
+    this.setState({
+      menuContext:null
+    })
+  }
+
+  handleClick = event => {
+    this.setState({
+      menuContext:event.currentTarget
+    })
+  }
+
 
   componentDidMount() {
     if (!this.props.userData.user) {
@@ -127,62 +108,75 @@ class Users extends Component {
 
   }
 
-  handleValue = (event, index) => {
-    let newObject = { orderForm: { ...this.state.orderForm } };
-    newObject['orderForm'][event.target.name] = event.target.value;
-    this.setState(newObject);
 
-  }
-
-  handleSubmit = (event, index) => {
-    event.preventDefault();
-    axios.post(`/login-json`, { username: event.target.username.value, password: event.target.password.value })
-      .then(res => {
-
-        let estado = null
-        if (res.data.success == 0) {
-          estado = false
-        }
-        if (res.data.success == 1) {
-          estado = true
-          this.props.onLogin(res.data.user.username);
-        }
-
-        this.setState({
-          orderForm: {
-            ...this.state.orderForm,
-            password: '',
-            successPass: estado
-          }
-        })
-
-      })
-
-  }
 
 
 
 
   render() {
+
     return ([
 
-      <Header user={this.props.userData.user} />
+      <Header key="users-comp-1" user={this.props.userData.user} />
       ,
       <div className="container">
-        <div className="row prueba justify-content-center">
+        <div className="row  justify-content-center">
           <div className="col-md-7 mt-4 ">
-            <MuiThemeProvider theme={theme}>
-              <MUIDataTable
-                title={"Usuarios"}
-                data={this.state.users}
-                columns={columns2}
-                options={options}
-                />
+            <Card>
+              <CardContent>
+                <h4>Usuarios</h4>
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  onClick={this.handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                 <Menu
+                   id="simple-menu"
+                   anchorEl={this.state.menuContext}
+                   keepMounted
+                   open={Boolean(this.state.menuContext)}
+                   onClose={this.handleClose}
+                 >
+                   <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                   <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                   <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                 </Menu>
+                    <List key="users-comp-2" >
+                   {this.state.users.map((value,index) => {
+                     const labelId = `checkbox-list-label-${index}`;
 
-            </MuiThemeProvider>
+                     return (
+                       <ListItem key={index} role={undefined} dense button onClick={ () => this.handleToggle(value)}>
+                          <ListItemIcon>
+                              <Checkbox
+                                  edge="start"
+                                  checked={this.state.checked.indexOf(value) !== -1}
+                                  tabIndex={-1}
+                                  disableRipple
+                                  inputProps={{ 'aria-labelledby': labelId }}
+                                  />
+                          </ListItemIcon>
+                          <ListItemText id={labelId} primary={ value.username } />
+                          <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="comments" onClick={ (event) => { this.deleteUser(value) } }>
+                                <CommentIcon  />
+
+                            </IconButton>
+
+                          </ListItemSecondaryAction>
+                       </ListItem>
+                     );
+                   })}
+                   </List>
+                </CardContent>
+            </Card>
           </div>
         </div>
-      </div>
+     </div>
+
     ]
 
     );
