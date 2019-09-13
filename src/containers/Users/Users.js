@@ -1,31 +1,14 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Header from '../../components/Header/Header';
 import axios from 'axios';
 import * as actionTypes from '../../store/actions';
+import ListUsers from './components/listUsers';
+import NewUser from './components/newUser';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
 
 import Modal from '@material-ui/core/Modal';
 
@@ -54,8 +37,84 @@ class Users extends Component {
       }
     },
     modalOpen: false,
-    newUser:false,
-    prevLocation:'/users'
+
+    newUserForm: {
+      nombre: {
+          elementType: 'input',
+          elementConfig: {
+              type: 'text',
+              placeholder: 'Nombre',
+              fullWidth: true
+          },
+          value: '',
+          validation: {
+              required: true
+          },
+          valid: false,
+          touched: false
+      },
+        username: {
+            elementType: 'input',
+            elementConfig: {
+                type: 'text',
+                placeholder: 'usuario',
+                fullWidth: true
+            },
+            value: '',
+            validation: {
+                required: true
+            },
+            valid: false,
+            touched: false
+        },
+        password: {
+            elementType: 'input',
+            elementConfig: {
+                type: 'password',
+                placeholder: 'constraseña',
+                fullWidth: true
+            },
+            value: '',
+            validation: {
+                required: true
+            },
+            valid: false,
+            touched: false
+        },
+        tipoUser: {
+            elementType: 'select',
+            elementConfig: {
+                type: 'text',
+                placeholder: 'tipo de usuario',
+                fullWidth: true
+            },
+            value: '',
+            validation: {
+                required: true
+            },
+            valid: false,
+            touched: false
+        },
+        descripcion: {
+            elementType: 'textarea',
+            elementConfig: {
+                type: 'text',
+                placeholder: 'descripcion',
+                fullWidth: true
+            },
+            value: '',
+            validation: {
+                required: true
+            },
+            valid: false,
+            touched: false
+        },
+
+
+    },
+    formIsValid: false
+
+
 
   }
 
@@ -119,14 +178,10 @@ class Users extends Component {
       this.setState({
         menuContext: null,
       }, () => {
-          this.props.history.push('/newuser');
+          this.props.history.push('/users/newuser');
         }
       )
-
-
     }
-
-
   }
 
   menuHandleOpen = event => {
@@ -156,9 +211,7 @@ class Users extends Component {
             users: resultado
           })
         }
-
       })
-
   }
 
   componentDidMount() {
@@ -180,23 +233,7 @@ class Users extends Component {
 
   }
 
-  componentDidUpdate() {
-      if(this.state.prevLocation != this.props.location.pathname)
-      {
-        let newUser = false;
-        if(this.props.location.pathname == '/newuser')
-            newUser = true;
 
-         console.log(newUser);   
-
-          this.setState({
-            prevLocation:this.props.location.pathname,
-            newUser:newUser
-
-          })
-      }        
-
-  }
 
 
 
@@ -207,106 +244,34 @@ class Users extends Component {
       <Header key="users-comp-1" user={this.props.userData.user} />
       ,
       <div key="users-comp-2" className="container">
-      { !this.state.newUser && (
-        <div className="row  justify-content-center">
-          <div className="col-md-7 mt-4 ">
-            <Card>
-              <CardContent>
-                <h4>Usuarios</h4>
-                <div style={{ position: 'relative', paddingBottom: '2em' }}>
-                  <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    onClick={this.menuHandleOpen}
-                    className="iconmenu"
-                    >
-                    <MoreVertIcon />
-                  </IconButton>
-                </div>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={this.state.menuContext}
-                  keepMounted
-                  open={Boolean(this.state.menuContext)}
-                  onClose={this.menuHandleClose}
-                  >
+      <Switch>
+            <Route path="/users" exact  render={() =>
 
-                  {Object.keys(this.state.botonesAcciones).map((keyName, i) => (
-                    <MenuItem key={'menu-' + keyName} onClick={(event) => { this.menuHandleItemClick(keyName) } }>
-                      <ListItemIcon>
-                        {keyName == 'nuevo' ? (<AddIcon color={this.state.botonesAcciones[keyName].enabled ? 'inherit' : 'disabled'} />) : keyName == 'editar' ? (<EditIcon color={this.state.botonesAcciones[keyName].enabled ? 'inherit' : 'disabled'} />) : keyName == 'delete' ? (<DeleteIcon color={this.state.botonesAcciones[keyName].enabled ? 'inherit' : 'disabled'} />) : null}
-                      </ListItemIcon>
-                      <Typography color={this.state.botonesAcciones[keyName].enabled ? 'textPrimary' : 'textSecondary'} variant="inherit">{this.state.botonesAcciones[keyName].texto}</Typography>
-                    </MenuItem>
-                  ))}
+              <ListUsers
+                  menuHandleOpen={(event) => this.menuHandleOpen(event)}
+                  menuHandleClose={(event) => this.menuHandleClose(event)}
+                  menuHandleItemClick={(keyName) => this.menuHandleItemClick(keyName)}
+                  handleToggle={(value) => this.handleToggle(value)}
+                  deleteUser={(value) => this.deleteUser(value)}
+
+                  menuContext={this.state.menuContext}
+                  botonesAcciones={this.state.botonesAcciones}
+                  users={this.state.users}
+                  checked={this.state.checked}
 
 
-                </Menu>
-                <div style={{ clear: 'both', display: 'table' }} />
-                <List >
-                  {this.state.users.map((value, index) => {
-                    const labelId = `checkbox-list-label-${index}`;
 
-                    return (
-                      <ListItem key={index} role={undefined} dense button onClick={() => this.handleToggle(value)}>
-                        <ListItemIcon>
-                          <Checkbox
-                            edge="start"
-                            checked={this.state.checked.indexOf(value) !== -1}
-                            tabIndex={-1}
-                            disableRipple
-                            inputProps={{ 'aria-labelledby': labelId }}
-                            />
-                        </ListItemIcon>
-                        <ListItemText
-                          id={labelId}
-                          primary={
-                            <React.Fragment>
-                              {value.nombre}
-                              <Typography
-                                component="span"
-                                variant="body2"
+              />
 
-                                color="textSecondary"
-                                >
-                                {' - ' + value.tipo_users_desc}
-                              </Typography>
-                            </React.Fragment>
 
-                          }
-                          secondary={
-                            <React.Fragment>
-                              Username:
-                               <Typography
-                                component="span"
-                                variant="body2"
+            } />
+            <Route path="/users/newuser"  render={() =>
 
-                                color="textPrimary"
-                                >
-                                {' ' + value.username}
-                              </Typography>
+              <h1>Hola matias</h1>
 
-                            </React.Fragment>
+            } />
+        </Switch>
 
-                          }
-                          />
-                        <ListItemSecondaryAction>
-                          <IconButton edge="end" aria-label="comments" onClick={(event) => { this.deleteUser(value) } }>
-                            <CommentIcon />
-
-                          </IconButton>
-
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    );
-                  })}
-                </List>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-        )}
       </div> ,
       <Modal
         aria-labelledby="simple-modal-title"

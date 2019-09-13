@@ -20,10 +20,9 @@ class App extends Component {
   render () {
     return (
       <ThemeProvider theme={theme}>
-          <Switch>
-            <Route path="/users" exact component={Users} />
-            <Route path="/newuser" exact component={Users} />
+          <Switch>          
             <Route path="/" exact component={Root} />
+            <Route path="/users"  component={Users} />
           </Switch>
           </ThemeProvider>
 

@@ -53,7 +53,6 @@ class Root extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.userData)
 
     }
 
@@ -179,16 +178,7 @@ class Root extends Component {
                 <form onSubmit={this.handleSubmit}>
 
 
-                    { /*  <div className="form-group">
-        <label htmlFor="user">Usuario:</label>
-        <input type="text" className="form-control" id="username" name="username" onChange={this.handleValue} value={this.state.orderForm.username} required />
-      </div>
-      <div className="form-group">
-        <label htmlFor="password">Contraseña:</label>
-        <input type="password" className="form-control" id="password" name="password" onChange={this.handleValue} value={this.state.orderForm.password} required />
-      </div>
-      */}
-
+                  
                     <div className="row justify-content-center">
                         <div className="col-md-4 mt-5">
                             {alerta}
@@ -210,14 +200,14 @@ class Root extends Component {
                                     changed={(event) => this.inputChangedHandler(event, formElement.id)} />
                             ))}
                             </div>
-                            
-                                    <button className="btn btn-primary" disabled={!this.state.formIsValid} type="submit" >Enviar </button> 
+
+                                    <button className="btn btn-primary" disabled={!this.state.formIsValid} type="submit" >Enviar </button>
 
                                 </div>
                             </div>
 
 
-                            
+
                         </div>
                     </div>
 
