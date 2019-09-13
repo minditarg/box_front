@@ -21,7 +21,8 @@ class App extends Component {
     return (
       <ThemeProvider theme={theme}>
           <Switch>
-            <Route path="/users" component={Users} />
+            <Route path="/users" exact component={Users} />
+            <Route path="/newuser" exact component={Users} />
             <Route path="/" exact component={Root} />
           </Switch>
           </ThemeProvider>
