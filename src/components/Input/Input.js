@@ -1,5 +1,7 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 
 const input = ( props ) => {
@@ -30,16 +32,22 @@ const input = ( props ) => {
             break;
         case ( 'select' ):
             inputElement = (
-                <select
-
-                    value={props.value}
-                    onChange={props.changed}>
-                    {props.elementConfig.options.map(option => (
-                        <option key={option.value} value={option.value}>
-                            {option.displayValue}
-                        </option>
+        <Select
+          value={props.value}
+          onChange={props.changed}
+          inputProps={{
+            name: 'age',
+            id: 'age-simple',
+          }}
+        >
+         {props.elementConfig.options.map(option => (
+              <MenuItem key={option.value} value={option.value}>{option.displayValue}</MenuItem>
+                       
                     ))}
-                </select>
+         
+         
+        </Select>
+            
             );
             break;
         default:

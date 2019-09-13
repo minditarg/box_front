@@ -6,9 +6,16 @@ import Input from '../../../components/Input/Input';
 
 const newUser = ( props ) =>
 {
+    const formElementsArray = [];
+        for (let key in props.orderForm) {
+            formElementsArray.push({
+                id: key,
+                config: props.orderForm[key]
+            });
+        }
 return (
 
-  <form onSubmit={this.handleSubmit}>
+  <form >
 
 
 
@@ -18,7 +25,7 @@ return (
               <div className="card" >
                   { /* <img src="..." class="card-img-top" alt="..."> */}
                   <div className="card-body" style={{ marginLeft:25,marginRight:25 }}>
-                      <h5 className="card-title">Inicio de sesión</h5>
+                      <h5 className="card-title">Nuevo Usuario</h5>
                       <div className="mt-3 mb-3">
                       {formElementsArray.map(formElement => (
                   <Input
@@ -30,11 +37,12 @@ return (
                       invalid={!formElement.config.valid}
                       shouldValidate={formElement.config.validation}
                       touched={formElement.config.touched}
-                      changed={(event) => this.inputChangedHandler(event, formElement.id)} />
+                      changed={(event) => props.inputChangedHandler(event, formElement.id)}
+                       />
               ))}
               </div>
 
-                      <button className="btn btn-primary" disabled={!this.state.formIsValid} type="submit" >Enviar </button>
+                      <button className="btn btn-primary" disabled={!props.formIsValid} type="submit" >Enviar </button>
 
                   </div>
               </div>

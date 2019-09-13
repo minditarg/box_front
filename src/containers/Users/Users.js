@@ -86,17 +86,27 @@ class Users extends Component {
             elementConfig: {
                 type: 'text',
                 placeholder: 'tipo de usuario',
+                 options: [
+                   { value:1,
+                     displayValue:'admin' },
+                     {
+                       value:2,
+                       displayValue:'pañol'
+                     }
+              
+                ],
                 fullWidth: true
             },
             value: '',
             validation: {
-                required: true
+                required:true
             },
+           
             valid: false,
             touched: false
         },
         descripcion: {
-            elementType: 'textarea',
+            elementType: 'input',
             elementConfig: {
                 type: 'text',
                 placeholder: 'descripcion',
@@ -233,6 +243,87 @@ class Users extends Component {
 
   }
 
+   handleSubmit = (event, index) => {
+        event.preventDefault();
+        axios.post(`/login-json`, { username: this.state.orderForm.username.value, password: this.state.orderForm.password.value })
+            .then(res => {
+
+                let estado = null
+                if (res.data.success == 0) {
+                    estado = false
+                }
+                if (res.data.success == 1) {
+                    estado = true
+                    this.props.onLogin(res.data.user);
+                }
+
+                let password = { ...this.state.orderForm.password };
+                password.value = '';
+
+
+                this.setState({
+                    orderForm: {
+                        ... this.state.orderForm,
+                        password: {
+                            ...password
+                        }
+                    },
+                    successPass: estado
+                }, () => {
+                    if (estado)
+                        this.props.history.push('/users');
+                })
+
+            })
+
+    }
+
+    checkValidity(value, rules) {
+        let isValid = true;
+        let textValid = null;
+
+        console.log(value);
+        if (rules.required) {
+            isValid = value.toString().trim() !== '' && isValid;
+            textValid = 'El campo es requerido'
+        }
+
+        if (rules.minLength) {
+            isValid = value.length >= rules.minLength && isValid;
+            textValid = 'No supera la cantidad de caracteres minimos'
+        }
+
+        if (rules.maxLength) {
+            isValid = value.length <= rules.maxLength && isValid;
+            textValid = 'Supera el maximo de caracteres';
+        }
+
+        return {isValid:isValid,textValid:textValid};
+    }
+
+    inputChangedHandler = (event, inputIdentifier) => {
+        let checkValid;
+        const updatedOrderForm = {
+            ...this.state.newUserForm
+        };
+        const updatedFormElement = {
+            ...updatedOrderForm[inputIdentifier]
+        };
+        updatedFormElement.value = event.target.value;
+        checkValid =  this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+        updatedFormElement.valid = checkValid.isValid;
+        updatedFormElement.textValid = checkValid.textValid;
+        updatedFormElement.touched = true;
+        updatedOrderForm[inputIdentifier] = updatedFormElement;
+
+        let formIsValid = true;
+        for (let inputIdentifier in updatedOrderForm) {
+            formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+        }
+        this.setState({ newUserForm: updatedOrderForm, formIsValid: formIsValid });
+    }
+
+
 
 
 
@@ -267,7 +358,15 @@ class Users extends Component {
             } />
             <Route path="/users/newuser"  render={() =>
 
-              <h1>Hola matias</h1>
+             <NewUser 
+             orderForm={this.state.newUserForm} 
+             formIsValid={this.state.formIsValid} 
+             
+             handleSubmit={(event) => this.handleSubmit(event) }
+             checkValidity={ (value, rules) => this.checkValidity(value,rules) }
+             inputChangedHandler={ (event,inputIdentifier)=> this.inputChangedHandler(event,inputIdentifier)}
+
+             />
 
             } />
         </Switch>
