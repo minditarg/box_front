@@ -20,7 +20,7 @@ return (
 
 
       <div className="row justify-content-center">
-          <div className="col-md-4 mt-5">
+          <div className="col-md-7 mt-5">
 
               <div className="card" >
                   { /* <img src="..." class="card-img-top" alt="..."> */}
@@ -42,7 +42,7 @@ return (
               ))}
               </div>
 
-                      <button className="btn btn-primary" disabled={!props.formIsValid} type="submit" >Enviar </button>
+                      <button className="btn btn-primary" disabled={!props.formIsValid} type="submit" >Guardar </button>
 
                   </div>
               </div>

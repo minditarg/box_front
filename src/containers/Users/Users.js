@@ -43,7 +43,7 @@ class Users extends Component {
           elementType: 'input',
           elementConfig: {
               type: 'text',
-              placeholder: 'Nombre',
+              label: 'Nombre',
               fullWidth: true
           },
           value: '',
@@ -57,7 +57,7 @@ class Users extends Component {
             elementType: 'input',
             elementConfig: {
                 type: 'text',
-                placeholder: 'usuario',
+                label: 'usuario',
                 fullWidth: true
             },
             value: '',
@@ -71,7 +71,7 @@ class Users extends Component {
             elementType: 'input',
             elementConfig: {
                 type: 'password',
-                placeholder: 'constraseña',
+                label: 'constraseña',
                 fullWidth: true
             },
             value: '',
@@ -84,16 +84,16 @@ class Users extends Component {
         tipoUser: {
             elementType: 'select',
             elementConfig: {
-                type: 'text',
-                placeholder: 'tipo de usuario',
+                label:'Tipo de usuario',
                  options: [
-                   { value:1,
-                     displayValue:'admin' },
-                     {
-                       value:2,
-                       displayValue:'pañol'
-                     }
-              
+                   {
+                     value:1,
+                     displayValue:'admin'
+                   },
+                   {
+                     value:2,
+                     displayValue:'pañol'
+                   }
                 ],
                 fullWidth: true
             },
@@ -101,16 +101,17 @@ class Users extends Component {
             validation: {
                 required:true
             },
-           
+
             valid: false,
             touched: false
         },
         descripcion: {
-            elementType: 'input',
+            elementType: 'textarea',
             elementConfig: {
                 type: 'text',
                 placeholder: 'descripcion',
-                fullWidth: true
+                fullWidth: true,
+                rows:4
             },
             value: '',
             validation: {
@@ -358,10 +359,10 @@ class Users extends Component {
             } />
             <Route path="/users/newuser"  render={() =>
 
-             <NewUser 
-             orderForm={this.state.newUserForm} 
-             formIsValid={this.state.formIsValid} 
-             
+             <NewUser
+             orderForm={this.state.newUserForm}
+             formIsValid={this.state.formIsValid}
+
              handleSubmit={(event) => this.handleSubmit(event) }
              checkValidity={ (value, rules) => this.checkValidity(value,rules) }
              inputChangedHandler={ (event,inputIdentifier)=> this.inputChangedHandler(event,inputIdentifier)}

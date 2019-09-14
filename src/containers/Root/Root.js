@@ -21,7 +21,7 @@ class Root extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'usuario',
+                    label: 'usuario',
                     fullWidth: true
                 },
                 value: '',
@@ -35,7 +35,7 @@ class Root extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
-                    placeholder: 'constraseña',
+                    label: 'constraseña',
                     fullWidth: true
                 },
                 value: '',
@@ -173,12 +173,12 @@ class Root extends Component {
 
         }
         return (
-            <div>
-                <Header user={this.props.userData.user} />
+
+
                 <form onSubmit={this.handleSubmit}>
 
 
-                  
+
                     <div className="row justify-content-center">
                         <div className="col-md-4 mt-5">
                             {alerta}
@@ -201,7 +201,7 @@ class Root extends Component {
                             ))}
                             </div>
 
-                                    <button className="btn btn-primary" disabled={!this.state.formIsValid} type="submit" >Enviar </button>
+                                    <button className="btn btn-primary" disabled={!this.state.formIsValid} type="submit" >Ingresar </button>
 
                                 </div>
                             </div>
@@ -214,7 +214,7 @@ class Root extends Component {
 
 
                 </ form>
-            </div>
+            
         );
     }
 }
