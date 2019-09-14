@@ -86,14 +86,7 @@ class Users extends Component {
             elementConfig: {
                 label:'Tipo de usuario',
                  options: [
-                   {
-                     value:1,
-                     displayValue:'admin'
-                   },
-                   {
-                     value:2,
-                     displayValue:'pañol'
-                   }
+                  
                 ],
                 fullWidth: true
             },
@@ -214,7 +207,10 @@ class Users extends Component {
   };
 
   getUsersAdmin = () => {
-    axios.get('/list-users-admin')
+
+    
+
+    axios.get('/list-users')
       .then(res => {
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
@@ -223,7 +219,51 @@ class Users extends Component {
           })
         }
       })
-  }
+
+     //this.state.newUserForm.tipoUser.elementConfig.options
+
+      axios.get('/list-users_type')
+      .then(res => {
+        if (res.data.success == 1) {
+          let resultadoUserType = [...res.data.result];
+          let newUserFormAlt = {...this.state.newUserForm};
+
+          /*
+          let auxiliar = resultadoUserType.map((element) => {
+            return { value:element.id, displayValue:element.desc}
+          })
+          */
+
+          let a = [];
+          resultadoUserType.forEach(function(entry){
+            a.push({
+              value: entry.id,
+              displayValue: entry.desc
+            });
+          })
+          
+          console.log(a);
+
+          newUserFormAlt.tipoUser.elementConfig.options = a;
+
+         
+          this.setState({
+            newUserForm : newUserFormAlt
+         //   users: resultadoUserType
+          })
+        }
+      })
+    }
+/*
+      {
+        value:1,
+        displayValue:'admin'
+      },
+      {
+        value:2,
+        displayValue:'pañol'
+      }
+  }*/
 
   componentDidMount() {
 
@@ -364,7 +404,6 @@ class Users extends Component {
              formIsValid={this.state.formIsValid}
 
              handleSubmit={(event) => this.handleSubmit(event) }
-             checkValidity={ (value, rules) => this.checkValidity(value,rules) }
              inputChangedHandler={ (event,inputIdentifier)=> this.inputChangedHandler(event,inputIdentifier)}
 
              />

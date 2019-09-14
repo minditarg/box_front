@@ -4,6 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import Root from'./containers/Root/Root';
 import Users from'./containers/Users/Users';
+import Stock from'./containers/Stock/Stock';
 import { createMuiTheme } from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
@@ -23,6 +24,7 @@ class App extends Component {
           <Switch>          
             <Route path="/" exact component={Root} />
             <Route path="/users"  component={Users} />
+            <Route path="/stock"  component={Stock} />
           </Switch>
           </ThemeProvider>
 

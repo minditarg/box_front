@@ -88,6 +88,7 @@ class Root extends Component {
                             ...password
                         }
                     },
+                    formIsValid:false,
                     successPass: estado
                 }, () => {
                     if (estado)

@@ -89,7 +89,7 @@ return (
 
                           color="textSecondary"
                           >
-                          {' - ' + value.tipo_users_desc}
+                          {' - ' + value.desc}
                         </Typography>
                       </React.Fragment>
 
